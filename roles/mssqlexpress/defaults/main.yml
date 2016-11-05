@@ -1,0 +1,11 @@
+mssqlexpress_action: none
+
+# 2014 express
+#mssqlexpress_download_url: https://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/Express%2064BIT/SQLEXPR_x64_ENU.exe
+
+# 2016 express
+mssqlexpress_download_url: https://download.microsoft.com/download/E/1/2/E12B3655-D817-49BA-B934-CEB9DAC0BAF3/SQLEXPR_x64_ENU.exe
+# 2016 eval
+#mssqlexpress_download_url: http://care.dlservice.microsoft.com/dl/download/F/E/9/FE9397FA-BFAB-4ADD-8B97-91234BC774B2/SQLServer2016-x64-ENU.iso?tduid=(fc469edc1035ebbdad1547b9e83aba8a)(256380)(2459594)(TnL5HPStwNw-_q6Lv69kANIU.E_BB3bZAw)()
+#mssqlexpress_download_url: https://download.microsoft.com/download/E/A/E/EAE6F7FC-767A-4038-A954-49B8B05D04EB/Express%2064BIT/SQLEXPR_x64_ENU.exe
+#mssqlexpress_install_path: '{{ mssqlexpress_temp }}\SQLEXPR_x64_ENU.exe'

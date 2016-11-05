@@ -1,0 +1,11 @@
+- include: preflight.yml
+
+- include: mssqlexpress-{{ mssqlexpress_action }}.yml
+  static: no
+  when: mssqlexpress_action in ["install"]
+
+- name: ensure mssqlserver service is started and configured to auto-start
+  win_service: 
+    name: mssqlserver
+    state: started
+    start_mode: auto

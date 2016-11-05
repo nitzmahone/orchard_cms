@@ -1,0 +1,46 @@
+- name: get remote tempdir
+  raw: $env:TEMP
+  register: tempdir_out
+
+- set_fact:
+    mssqlexpress_tempdir: '{{ tempdir_out.stdout_lines[0].strip() }}\sqlexpress'
+
+- name: ensure sqlexpress tempdir exists
+  win_file: 
+    path: '{{ mssqlexpress_tempdir }}'
+    state: directory
+
+- name: download SQL Express 2016 installer
+  win_get_url:
+    url: "{{ mssqlexpress_download_url }}"
+    force: no
+    dest: '{{ mssqlexpress_tempdir }}\SQLEXPR_x64_ENU.exe'
+
+- name: check max WinRM shell memory setting
+  win_shell_become: 
+    command_line: $(Get-Item wsman:/localhost/Shell/MaxMemoryPerShellMB).Value
+  changed_when: False
+  register: existing_max_mem
+
+# ensure that WinRM won't fail on a small memory quota- SQL Server installer is a hog
+- name: update max WinRM shell memory for large installers
+  raw: Set-Item wsman:/localhost/Shell/MaxMemoryPerShellMB 2048
+  when: existing_max_mem.stdout | int < 2048
+
+- name: install SQL Express 2016
+  win_shell_become: 
+    command_line: '{{ mssqlexpress_tempdir }}\SQLExpr_x64_ENU.exe /q /ACTION=Install /FEATURES=SQL /INSTANCENAME=MSSQLSERVER /SQLSYSADMINACCOUNTS="Administrators" /IACCEPTSQLSERVERLICENSETERMS /UpdateEnabled=True'
+    username: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+
+- name: remove installer tempdir
+  win_file:
+    path: mssqlexpress_tempdir
+    state: absent
+
+- name: refetch facts
+  setup:
+
+- name: reboot if necessary
+  win_reboot:
+  when: ansible_reboot_pending

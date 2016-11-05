@@ -1,0 +1,9 @@
+- name: check for SQL Express 2016 DB Engine product code
+  raw: Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{0C457EC3-E998-4041-B856-908D5A2C1708}'
+  changed_when: false
+  register: tpo
+
+- name: set SQL Express 2016 role action
+  set_fact:
+    mssqlexpress_action: install
+  when: tpo.stdout is search('False')
